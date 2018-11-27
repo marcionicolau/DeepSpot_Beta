@@ -1,5 +1,6 @@
 ---
-title: "Untitled"
+title: "DeepSpot Beta"
+author: "Marcio Nicolau"
 output: 
   flexdashboard::flex_dashboard:
     theme: simplex
@@ -7,6 +8,7 @@ output:
     vertical_layout: fill
     runtime: shiny
     social: menu
+    source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -137,3 +139,13 @@ Tranfering the learnings from the pre-trained model reduces the computational co
 _____
   
 Here are a list of tutorials and papers about Deep Learning & Image Classification:
+  
+1. [DataCamp's Keras Deep Learning R Tutorial](https://www.datacamp.com/community/tutorials/keras-r-deep-learning)
+2. [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)  
+3. [ResNet50 Model](http://ethereon.github.io/netscope/#/gist/db945b393d40bfa26006)
+4. [Keras Tutorial: Using pre-trained Imagenet models](http://www.learnopencv.com/keras-tutorial-using-pre-trained-imagenet-models/)
+5. [Keras Pretrained models from Kaggle](https://www.kaggle.com/gaborfodor/keras-pretrained-models)
+6. [Transfer learning & The art of using Pre-trained Models in Deep Learning](https://www.analyticsvidhya.com/blog/2017/06/transfer-learning-the-art-of-fine-tuning-a-pre-trained-model/)
+7. [useR 2016 Machine Learning Algorithmic Deep Dive Tutorial](https://github.com/ledell/useR-machine-learning-tutorial/blob/master/deep-neural-networks.ipynb)
+8. [Transfer Learning](https://en.wikipedia.org/wiki/Transfer_learning)
+
