@@ -20,7 +20,7 @@ options(DT.options = list(pageLength = 3, dom = 't'))
 ```
 
 
-Sidebar {.sidebar}
+Sidebar {.sidebar data-width=350}
 =====================================
 
 DeepSpot is a user-friendly neural networks API. This application uses the **Inception-v3 model**, with pre-trained weights and
