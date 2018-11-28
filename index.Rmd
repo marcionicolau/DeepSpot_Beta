@@ -1,20 +1,18 @@
 ---
 title: "DeepSpot Beta"
-author: "Marcio Nicolau"
 output: 
   flexdashboard::flex_dashboard:
-    theme: simplex
+    theme: paper
     orientation: rows
     vertical_layout: fill
     social: menu
-    source_code: embed
 runtime: shiny
 ---
 
+
 ```{r setup, include=FALSE}
-library(devtools)
 library(flexdashboard)
-library(keras)
+library(tensorflow)
 library(knitr)
 library(DT)
 
@@ -28,17 +26,22 @@ Sidebar {.sidebar}
 DeepSpot is a user-friendly neural networks API. This application uses the **Inception-v3 model**, with pre-trained weights and
 adjusted to predict leaf diseases in wheat images classes including:
 
-- TanSpot 🦋
-- Powdery Mildew 🌳
-- Healthy Leaves ⚽
-- Dry leaves 🍹
+- TanSpot
+- Powdery Mildew
+- Healthy Leaves
+- Dry leaves
 
-______
 
-```{r, sidebar}
+
+```{r}
 # shiny inputs defined here
 fileInput("file1", "Select an image from your local machine:", accept = c(".jpg", ".jpeg", ".png"))
+selectInput("n_classes", label = "Number of Classes:",
+            choices = seq_len(4), selected = 2)
+
 ```
+
+
 
 Model {data-icon="fa-magic"}
 =====================================  
@@ -68,7 +71,7 @@ renderImage({
       
   }, deleteFile = FALSE)
 ```
-
+   
 
 Row
 -------------------------------------
@@ -77,7 +80,7 @@ Row
 
 ```{r, global, include=FALSE}
 # instantiate the model
-model <- application_resnet50(weights = 'imagenet')
+source('predict.R', local = TRUE)
 ```
 
 
@@ -97,20 +100,22 @@ renderDT({
       
     # load the image (copy an image from Photos)
     img_path <- inFile$datapath
-    img <- image_load(img_path, target_size = c(224,224))
-    x <- image_to_array(img)
+    # img <- image_load(img_path, target_size = c(224,224))
+    # x <- image_to_array(img)
+    # 
+    # # ensure we have a 4d tensor with single element in the batch dimension,
+    # # the preprocess the input for prediction using resnet50
+    # x <- array_reshape(x, c(1, dim(x)))
+    # x <- imagenet_preprocess_input(x)
+    # 
+    # # make predictions then decode and print them
+    # preds <- model %>% predict(x)
+    # 
+    # # table mods
+    # main = imagenet_decode_predictions(preds, top = 3)[[1]]
+    # main$explore_class_on_imagenet <- sprintf('Explore %s on ImageNet', main$class_name, main$class_description)
     
-    # ensure we have a 4d tensor with single element in the batch dimension,
-    # the preprocess the input for prediction using resnet50
-    x <- array_reshape(x, c(1, dim(x)))
-    x <- imagenet_preprocess_input(x)
-    
-    # make predictions then decode and print them
-    preds <- model %>% predict(x)
-    
-    # table mods
-    main = imagenet_decode_predictions(preds, top = 3)[[1]]
-    main$explore_class_on_imagenet <- sprintf('Explore %s on ImageNet', main$class_name, main$class_description)
+    main = predict_leafdisease(img_path, top = as.numeric(input$n_classes))
     
     DT::datatable(main)
     
@@ -118,9 +123,28 @@ renderDT({
   }) # end of progress message
 }, escape = FALSE)
 ```
+      
+Team {data-icon="fa-people-carry"}
+===================================== 
+
+**Where**
+
+We work at Embrapa Trigo a research unity from Brazilian Agricultural Research Corporation, located
+at Passo Fundo/RS.
+
+For more informations about us [follow](https://www.embrapa.br/trigo)
+
+**Who**
+
+- [Flavio Martins Santana](https://www.embrapa.br/equipe/-/empregado/322770/flavio-martins-santana) 
+- [Eduardo Caierão](https://www.embrapa.br/equipe/-/empregado/316379/eduardo-caierao) 
+- [Sandra Maria Mansur Scagliusi](https://www.embrapa.br/equipe/-/empregado/316783/sandra-maria-mansur-scagliusi) 
+- [Marcia Barrocas Moreira Pimentel](https://www.embrapa.br/equipe/-/empregado/302758/marcia-barrocas-moreira-pimentel) 
+- [Marcio Nicolau](https://www.embrapa.br/equipe/-/empregado/325170/marcio-nicolau) 
+- [Claudia Cristina Clebsch](https://www.embrapa.br/equipe/-/empregado/325169/claudia-cristina-clebsch)
+- [Diego Inacio Patricio](https://www.embrapa.br/equipe/-/empregado/355528/diego-inacio-patricio)
+
    
-
-
 Resources {data-icon="fa-bookmark"}
 ===================================== 
 
@@ -143,10 +167,10 @@ Here are a list of tutorials and papers about Deep Learning & Image Classificati
   
 1. [DataCamp's Keras Deep Learning R Tutorial](https://www.datacamp.com/community/tutorials/keras-r-deep-learning)
 2. [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)  
-3. [ResNet50 Model](http://ethereon.github.io/netscope/#/gist/db945b393d40bfa26006)
-4. [Keras Tutorial: Using pre-trained Imagenet models](http://www.learnopencv.com/keras-tutorial-using-pre-trained-imagenet-models/)
-5. [Keras Pretrained models from Kaggle](https://www.kaggle.com/gaborfodor/keras-pretrained-models)
-6. [Transfer learning & The art of using Pre-trained Models in Deep Learning](https://www.analyticsvidhya.com/blog/2017/06/transfer-learning-the-art-of-fine-tuning-a-pre-trained-model/)
-7. [useR 2016 Machine Learning Algorithmic Deep Dive Tutorial](https://github.com/ledell/useR-machine-learning-tutorial/blob/master/deep-neural-networks.ipynb)
-8. [Transfer Learning](https://en.wikipedia.org/wiki/Transfer_learning)
-
+3. [Keras Tutorial: Using pre-trained Imagenet models](http://www.learnopencv.com/keras-tutorial-using-pre-trained-imagenet-models/)
+4. [Keras Pretrained models from Kaggle](https://www.kaggle.com/gaborfodor/keras-pretrained-models)
+5. [Transfer learning & The art of using Pre-trained Models in Deep Learning](https://www.analyticsvidhya.com/blog/2017/06/transfer-learning-the-art-of-fine-tuning-a-pre-trained-model/)
+6. [useR 2016 Machine Learning Algorithmic Deep Dive Tutorial](https://github.com/ledell/useR-machine-learning-tutorial/blob/master/deep-neural-networks.ipynb)
+7. [Transfer Learning](https://en.wikipedia.org/wiki/Transfer_learning)
+8. [Tensorflow Package](https://tensorflow.rstudio.com/)
+9. [Keras Package](https://keras.rstudio.com/)

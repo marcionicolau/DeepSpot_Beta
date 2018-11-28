@@ -7,15 +7,17 @@ freeze_weights(base_model)
 res50_model = keras_model_sequential() %>%
   base_model %>%
   layer_global_average_pooling_2d() %>%
-  layer_dense(units = 500, activation = "relu") %>%
-  layer_dense(units = 256, activation = "relu") %>%
+  layer_dense(units = 1024, activation = "relu") %>%
+  layer_dense(units = 756, activation = "relu") %>%
+  layer_dense(units = 128, activation = "relu") %>%
   layer_dense(units = 2, activation = "softmax")
 
 
-res50_model.summary()
+res50_model
   
 
-VGG16_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+res50_model$compile(loss='categorical_crossentropy', 
+                    optimizer= optimizer_rmsprop(), metrics=list("accuracy"))
 
 
 checkpointer = ModelCheckpoint(filepath='saved_models/weights.best.VGG16.hdf5', 
